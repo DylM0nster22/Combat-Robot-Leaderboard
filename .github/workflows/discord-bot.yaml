@@ -31,4 +31,4 @@ jobs:
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           ALLOWED_CHANNEL_IDS: ${{ secrets.ALLOWED_CHANNEL_IDS }}
           LEADERBOARD_CHANNEL_ID: ${{ secrets.LEADERBOARD_CHANNEL_ID }}
-        run: pyhton main.py
+        run: python main.py

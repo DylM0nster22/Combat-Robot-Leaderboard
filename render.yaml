@@ -1,0 +1,8 @@
+# render.yaml
+services:
+  - type: worker
+    name: combat-robot-bot
+    env: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python main.py"

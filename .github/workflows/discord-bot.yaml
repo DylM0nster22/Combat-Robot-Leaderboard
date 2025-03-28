@@ -1,0 +1,40 @@
+name: Run Discord Bot
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+  schedule:
+    - cron: '*/5 * * * *'   # Triggers every 5 minutes to ensure continuity
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360  # Maximum run time of 6 hours
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Discord Bot
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          ALLOWED_CHANNEL_IDS: ${{ secrets.ALLOWED_CHANNEL_IDS }}
+          LEADERBOARD_CHANNEL_ID: ${{ secrets.LEADERBOARD_CHANNEL_ID }}
+        run: |
+          echo "Starting Discord Bot..."
+          # The while loop will restart your bot if it exits, but note the overall job will still timeout after 6 hours.
+          while true; do
+              python main.py || echo "Bot crashed, restarting in 5 seconds..."
+              sleep 5
+          done

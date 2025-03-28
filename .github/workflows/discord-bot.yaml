@@ -4,8 +4,8 @@ on:
   push:
     branches: [ main ]
   workflow_dispatch:
-  schedule:
-    - cron: '*/5 * * * *'   # Triggers every 5 minutes to ensure continuity
+#  schedule:
+ #   - cron: '*/5 * * * *'   # Triggers every 5 minutes to ensure continuity
 
 jobs:
   run-bot:
@@ -31,10 +31,4 @@ jobs:
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           ALLOWED_CHANNEL_IDS: ${{ secrets.ALLOWED_CHANNEL_IDS }}
           LEADERBOARD_CHANNEL_ID: ${{ secrets.LEADERBOARD_CHANNEL_ID }}
-        run: |
-          echo "Starting Discord Bot..."
-          # The while loop will restart your bot if it exits, but note the overall job will still timeout after 6 hours.
-          while true; do
-              python main.py || echo "Bot crashed, restarting in 5 seconds..."
-              sleep 5
-          done
+        run: pyhton main.py

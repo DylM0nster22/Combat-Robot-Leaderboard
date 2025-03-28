@@ -10,7 +10,7 @@ on:
 jobs:
   run-bot:
     runs-on: ubuntu-latest
-    timeout-minutes: 360  # Maximum run time of 6 hours
+    timeout-minutes: 30  # Maximum run time of 6 hours
     steps:
       - uses: actions/checkout@v2
 

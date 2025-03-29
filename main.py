@@ -7,6 +7,7 @@ from discord.ext import commands, tasks
 from bs4 import BeautifulSoup
 from discord import app_commands
 from dotenv import load_dotenv
+from aiohttp import web
 
 load_dotenv()
 
@@ -379,24 +380,29 @@ async def on_ready():
     # Update leaderboards immediately on startup.
     await update_leaderboard_messages()
 
-def main():
-    if not DISCORD_TOKEN:
-        print("[ERROR] DISCORD_TOKEN not set. Exiting.")
-        return
-    bot.run(DISCORD_TOKEN)
-
-from threading import Thread
-from aiohttp import web
-
 async def handle(request):
     return web.Response(text="Bot is running!")
 
-def run_web_server():
+async def run_web_server():
     app = web.Application()
     app.router.add_get("/", handle)
-    web.run_app(app, port=8080)
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, port=8080)
+    await site.start()
+    print("Web server running on port 8080...")
 
-Thread(target=run_web_server).start()
+async def start_bot():
+    if not DISCORD_TOKEN:
+        print("[ERROR] DISCORD_TOKEN not set. Exiting.")
+        return
+    await bot.start(DISCORD_TOKEN)
+
+async def main():
+    await asyncio.gather(
+        run_web_server(),
+        start_bot()
+    )
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

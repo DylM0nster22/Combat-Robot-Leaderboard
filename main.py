@@ -385,5 +385,18 @@ def main():
         return
     bot.run(DISCORD_TOKEN)
 
+from threading import Thread
+from aiohttp import web
+
+async def handle(request):
+    return web.Response(text="Bot is running!")
+
+def run_web_server():
+    app = web.Application()
+    app.router.add_get("/", handle)
+    web.run_app(app, port=8080)
+
+Thread(target=run_web_server).start()
+
 if __name__ == "__main__":
     main()
